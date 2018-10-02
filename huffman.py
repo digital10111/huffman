@@ -1,6 +1,12 @@
+import heapq
+
+
 class Node:
     def __init__(self, value):
         self.freq = value
+
+    def __cmp__(self, other):
+        return cmp(self.freq, other.freq)
 
 
 class InternalNode:
@@ -8,6 +14,9 @@ class InternalNode:
         self.left = left_node
         self.right = right_node
         self.freq = left_node.freq + right_node.freq
+
+    def __cmp__(self, other):
+        return cmp(self.freq, other.freq)
 
     def get_height(self):
         if isinstance(self.right, Node) and isinstance(self.left, Node):
@@ -41,7 +50,7 @@ def read_file_into_heap(file_path):
                 continue
             else:
                 heap.append(Node(int(content)))
-    heap.sort(key=lambda x: x.freq)
+    heapq.heapify(heap)
     return heap
 
 
@@ -50,15 +59,13 @@ def solve(file_path="huffman.txt"):
     first = heap.pop(0)
     second = heap.pop(0)
     internal_node = merge(first, second)
-    heap.append(internal_node)
-    heap.sort(key=lambda x: x.freq)
+    heapq.heappush(heap, internal_node)
     while len(heap) > 0:
-        first = heap.pop(0)
+        first = heapq.heappop(heap)
         if len(heap) > 0:
-            second = heap.pop(0)
+            second = heapq.heappop(heap)
             internal_node = merge(first, second)
-            heap.append(internal_node)
-            heap.sort(key=lambda x: x.freq)
+            heapq.heappush(heap, internal_node)
     print first.get_height()
     print first.smallest()
 
