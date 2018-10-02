@@ -49,15 +49,14 @@ def read_file_into_heap(file_path):
             if i == 0:
                 continue
             else:
-                heap.append(Node(int(content)))
-    heapq.heapify(heap)
+                heapq.heappush(heap, Node(int(content)))
     return heap
 
 
 def solve(file_path="huffman.txt"):
     heap = read_file_into_heap(file_path)
-    first = heap.pop(0)
-    second = heap.pop(0)
+    first = heapq.heappop(heap)
+    second = heapq.heappop(heap)
     internal_node = merge(first, second)
     heapq.heappush(heap, internal_node)
     while len(heap) > 0:
